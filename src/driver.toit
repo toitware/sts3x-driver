@@ -75,7 +75,6 @@ class Driver:
 
     if periodic:
       command := COMMAND_PERIODIC_[frequency][accuracy]
-      print command
       device_.write command
       read_command_ = COMMAND_FETCH_DATA_
     else:
