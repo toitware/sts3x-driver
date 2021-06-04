@@ -58,15 +58,15 @@ class Driver:
   read_command_/ByteArray? := null
 
   /**
-  Instantiates the driver in single-shot, high accuracy measure mode.
+  Constructs the driver in single-shot, high accuracy measure mode.
 
-  Call read for reading the next value.
+  Call $read for reading the next value.
   */
   constructor .device_:
     configure
 
   /**
-  Configures the chip based on the arguments given.
+  Configures the chip.
 
   Set $periodic to have the chip automatically measure at the chosen $frequency.
   */
@@ -87,7 +87,7 @@ class Driver:
     device_.write COMMAND_BREAK_
 
   /**
-  Read out the next value.
+  Reads out the next value.
 
   This method blocks until the next measured value is available. For single-shot mode,
     this will also trigger the chip to perform a measure.
@@ -100,7 +100,6 @@ class Driver:
         if value:
           return -45.0 + (175 * value).to_float / binary.UINT16_MAX
         sleep --ms=50
-
     unreachable
 
   read_and_validate_ -> int?:
