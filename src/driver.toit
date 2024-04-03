@@ -2,8 +2,8 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
+import io
 import i2c
-import binary
 
 I2C_ADDRESS      ::= 0x4A
 I2C_ADDRESS_ALT  ::= 0x4B
@@ -98,7 +98,7 @@ class Driver:
         device_.write read_command_
         value := read_and_validate_
         if value:
-          return -45.0 + (175 * value).to_float / binary.UINT16_MAX
+          return -45.0 + (175 * value).to_float / int.MAX-U16
         sleep --ms=50
     unreachable
 
@@ -106,7 +106,7 @@ class Driver:
     data := device_.read 3: return null
     checksum := crc8_ data[0..2]
     if data[2] != checksum: throw "CRC_CHECK_FAILED"
-    return binary.BIG_ENDIAN.uint16 data 0
+    return io.BIG_ENDIAN.uint16 data 0
 
   static crc8_ data/ByteArray -> int:
     crc := 0xff
