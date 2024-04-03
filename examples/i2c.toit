@@ -12,10 +12,10 @@ SCL := gpio.Pin 22
 
 main:
   bus := i2c.Bus --sda=SDA --scl=SCL
-  device := bus.device sts3x.I2C_ADDRESS
+  device := bus.device sts3x.I2C-ADDRESS
   driver := sts3x.Driver device
 
-  driver.configure --periodic --frequency=sts3x.FREQUENCY_1HZ
+  driver.configure --periodic --frequency=sts3x.FREQUENCY-1HZ
   while true:
     print driver.read
     sleep --ms=1000

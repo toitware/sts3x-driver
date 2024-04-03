@@ -5,29 +5,29 @@
 import io
 import i2c
 
-I2C_ADDRESS      ::= 0x4A
-I2C_ADDRESS_ALT  ::= 0x4B
+I2C-ADDRESS      ::= 0x4A
+I2C-ADDRESS-ALT  ::= 0x4B
 
-FREQUENCY_0_5HZ ::= 0
-FREQUENCY_1HZ   ::= 1
-FREQUENCY_2HZ   ::= 2
-FREQUENCY_4HZ   ::= 3
-FREQUENCY_10HZ  ::= 4
+FREQUENCY-0-5HZ ::= 0
+FREQUENCY-1HZ   ::= 1
+FREQUENCY-2HZ   ::= 2
+FREQUENCY-4HZ   ::= 3
+FREQUENCY-10HZ  ::= 4
 
-ACCURACY_HIGH   ::= 0
-ACCURACY_MEDIUM ::= 1
-ACCURACY_LOW    ::= 2
+ACCURACY-HIGH   ::= 0
+ACCURACY-MEDIUM ::= 1
+ACCURACY-LOW    ::= 2
 
 /**
 Driver for STS3x-DIS high-accuracy digital temperature sensors.
 */
 class Driver:
-  static COMMAND_SINGLE_SHOT_ ::= [
+  static COMMAND-SINGLE-SHOT_ ::= [
     #[0x2C, 0x06],
     #[0x2C, 0x0D],
     #[0x2C, 0x10],
   ]
-  static COMMAND_PERIODIC_ ::= [
+  static COMMAND-PERIODIC_ ::= [
     [
       #[0x20, 0x32],
       #[0x20, 0x24],
@@ -50,12 +50,12 @@ class Driver:
       #[0x27, 0x2A],
     ]
   ]
-  static COMMAND_BREAK_       ::= #[0x30, 0x93]
-  static COMMAND_FETCH_DATA_  ::= #[0xE0, 0x00]
+  static COMMAND-BREAK_       ::= #[0x30, 0x93]
+  static COMMAND-FETCH-DATA_  ::= #[0xE0, 0x00]
 
   device_/i2c.Device
 
-  read_command_/ByteArray? := null
+  read-command_/ByteArray? := null
 
   /**
   Constructs the driver in single-shot, high accuracy measure mode.
@@ -70,21 +70,21 @@ class Driver:
 
   Set $periodic to have the chip automatically measure at the chosen $frequency.
   */
-  configure --periodic/bool=false --frequency=FREQUENCY_10HZ --accuracy=ACCURACY_HIGH:
-    device_.write COMMAND_BREAK_
+  configure --periodic/bool=false --frequency=FREQUENCY-10HZ --accuracy=ACCURACY-HIGH:
+    device_.write COMMAND-BREAK_
 
     if periodic:
-      command := COMMAND_PERIODIC_[frequency][accuracy]
+      command := COMMAND-PERIODIC_[frequency][accuracy]
       device_.write command
-      read_command_ = COMMAND_FETCH_DATA_
+      read-command_ = COMMAND-FETCH-DATA_
     else:
-      read_command_ = COMMAND_SINGLE_SHOT_[accuracy]
+      read-command_ = COMMAND-SINGLE-SHOT_[accuracy]
 
   /**
   Closes the device for reading.
   */
   close:
-    device_.write COMMAND_BREAK_
+    device_.write COMMAND-BREAK_
 
   /**
   Reads out the next value.
@@ -93,20 +93,20 @@ class Driver:
     this will also trigger the chip to perform a measure.
   */
   read -> float:
-    with_timeout --ms=2500:
+    with-timeout --ms=2500:
       while true:
-        device_.write read_command_
-        value := read_and_validate_
+        device_.write read-command_
+        value := read-and-validate_
         if value:
-          return -45.0 + (175 * value).to_float / int.MAX-U16
+          return -45.0 + (175 * value).to-float / int.MAX-U16
         sleep --ms=50
     unreachable
 
-  read_and_validate_ -> int?:
+  read-and-validate_ -> int?:
     data := device_.read 3: return null
     checksum := crc8_ data[0..2]
     if data[2] != checksum: throw "CRC_CHECK_FAILED"
-    return io.BIG_ENDIAN.uint16 data 0
+    return io.BIG-ENDIAN.uint16 data 0
 
   static crc8_ data/ByteArray -> int:
     crc := 0xff
