@@ -103,10 +103,12 @@ class Driver:
     unreachable
 
   read-and-validate_ -> int?:
-    data := device_.read 3: return null
-    checksum := crc8_ data[0..2]
-    if data[2] != checksum: throw "CRC_CHECK_FAILED"
-    return io.BIG-ENDIAN.uint16 data 0
+    catch:
+      data := device_.read 3
+      checksum := crc8_ data[0..2]
+      if data[2] != checksum: throw "CRC_CHECK_FAILED"
+      return io.BIG-ENDIAN.uint16 data 0
+    return null
 
   static crc8_ data/ByteArray -> int:
     crc := 0xff
