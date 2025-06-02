@@ -1,5 +1,8 @@
 name: sts3x
 description: Driver for STS3x-DIS high-accuracy digital temperature sensors.
-
 environment:
   sdk: ^2.0.0-alpha.144
+dependencies:
+  sensors:
+    url: github.com/toitware/toit-sensors
+    version: ^0.0.2
