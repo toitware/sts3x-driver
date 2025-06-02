@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-2020-12/schema",
-  "$id": "https://github.com/toitware/bme280-driver/service/schema.json",
-  "title": "BME280 Configuration",
-  "description": "Configuration for the BME280 temperature, humidity and pressure sensor.",
+  "$id": "https://github.com/toitware/sts3x-driver/service/schema.json",
+  "title": "STS3X Configuration",
+  "description": "Configuration for the STS3X temperature sensor.",
   "type": "object",
   "required": [
     "scl",
@@ -18,7 +18,7 @@
       "description": "The GPIO pin number of the SDA pin of the I2C bus."
     },
     "address": {
-      "description": "The I2C address of the BME280 sensor. If absent uses the default address. If set to 'alt' uses the alternate address. Otherwise, the address must be a valid I2C address."
+      "description": "The I2C address of the STS3X sensor. If absent uses the default address. If set to 'alt' uses the alternate address. Otherwise, the address must be a valid I2C address."
     }
   }
 }
