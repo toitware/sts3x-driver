@@ -3,12 +3,11 @@
 // in the LICENSE file.
 
 import i2c
-import gpio
 
 import sts3x
 
-SDA := gpio.Pin 21
-SCL := gpio.Pin 22
+SDA := 21
+SCL := 22
 
 main:
   bus := i2c.Bus --sda=SDA --scl=SCL

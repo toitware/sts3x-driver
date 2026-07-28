@@ -2,7 +2,6 @@
 // Use of this source code is governed by an MIT-style license that can be found
 // in the LICENSE file.
 
-import gpio
 import i2c
 import sensors.providers
 
@@ -13,8 +12,6 @@ MAJOR ::= 1
 MINOR ::= 0
 
 class Sensor_ implements providers.TemperatureSensor-v1:
-  sda_/gpio.Pin? := null
-  scl_/gpio.Pin? := null
   i2c_/i2c.Bus? := null
   device_/i2c.Device? := null
   sensor_/sts3x.Driver? := null
@@ -22,9 +19,7 @@ class Sensor_ implements providers.TemperatureSensor-v1:
   constructor --sda/int --scl/int --address/int:
     is-exception := true
     try:
-      sda_ = gpio.Pin sda
-      scl_ = gpio.Pin scl
-      i2c_ = i2c.Bus --sda=sda_ --scl=scl_
+      i2c_ = i2c.Bus --sda=sda --scl=scl
       device_ = i2c_.device address
       sensor_ = sts3x.Driver device_
       is-exception = false
@@ -32,8 +27,6 @@ class Sensor_ implements providers.TemperatureSensor-v1:
       if is-exception:
         if device_: device_.close
         if i2c_: i2c_.close
-        if sda_: sda_.close
-        if scl_: scl_.close
 
   temperature-read -> float?:
     return sensor_.read
@@ -48,12 +41,6 @@ class Sensor_ implements providers.TemperatureSensor-v1:
     if i2c_:
       i2c_.close
       i2c_ = null
-    if scl_:
-      scl_.close
-      scl_ = null
-    if sda_:
-      sda_.close
-      sda_ = null
 
 /**
 Installs the STS3x sensor.
